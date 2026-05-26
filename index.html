@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI MV Studio｜AI 音樂影像製作招商</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #07080d;
+      --bg-soft: #10131d;
+      --bg-card: rgba(255, 255, 255, 0.07);
+      --text: #f7f3ea;
+      --text-soft: rgba(247, 243, 234, 0.72);
+      --muted: rgba(247, 243, 234, 0.48);
+      --gold: #d9b46f;
+      --rose: #c96f8f;
+      --violet: #7467ff;
+      --cyan: #6ee7f9;
+      --line: rgba(255, 255, 255, 0.13);
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+      --radius-lg: 34px;
+      --radius-md: 22px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img, video {
+      max-width: 100%;
+      display: block;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px clamp(20px, 5vw, 72px);
+      color: #fff;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0));
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 30px rgba(217, 180, 111, 0.16);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .nav a {
+      transition: 0.25s ease;
+    }
+
+    .nav a:hover {
+      color: var(--gold);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -4;
+      transform: scale(1.03);
+      filter: saturate(1.1) contrast(1.08) brightness(0.72);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(201, 111, 143, 0.30), transparent 30%),
+        radial-gradient(circle at 78% 22%, rgba(116, 103, 255, 0.32), transparent 33%),
+        radial-gradient(circle at 68% 78%, rgba(217, 180, 111, 0.18), transparent 34%),
+        linear-gradient(110deg, rgba(4, 5, 8, 0.70), rgba(4, 5, 8, 0.32) 42%, rgba(4, 5, 8, 0.60));
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 88px 88px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.72), transparent 86%);
+    }
+
+    .hero-inner {
+      width: min(1180px, calc(100% - 40px));
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(34px, 6vw, 82px);
+      align-items: center;
+      padding-top: 90px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 8px 14px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      backdrop-filter: blur(18px);
+    }
+
+    .eyebrow i {
+      color: var(--gold);
+    }
+
+    h1 {
+      font-family: "Playfair Display", "Noto Sans TC", serif;
+      font-size: clamp(48px, 8vw, 108px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      max-width: 850px;
+    }
+
+    h1 span {
+      display: block;
+      background: linear-gradient(115deg, #fff 0%, #f4dba4 42%, #db83ad 70%, #8f86ff 100%);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      max-width: 650px;
+      margin-top: 26px;
+      color: var(--text-soft);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      color: #17120b;
+      background: linear-gradient(135deg, #f5d58e, #d9a951 52%, #f7ebc0);
+      box-shadow: 0 22px 50px rgba(217, 180, 111, 0.24);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 64px rgba(217, 180, 111, 0.34);
+    }
+
+    .btn-ghost {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.19);
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(18px);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(217, 180, 111, 0.5);
+      color: var(--gold);
+      transform: translateY(-3px);
+    }
+
+    .hero-card {
+      position: relative;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+      transform: translateY(26px);
+    }
+
+    .preview-frame {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 9 / 13;
+      border-radius: 26px;
+      background: #000;
+    }
+
+    .preview-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.12) contrast(1.05);
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: auto 18px 18px 18px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      background: rgba(5, 6, 10, 0.58);
+      backdrop-filter: blur(18px);
+    }
+
+    .preview-overlay small {
+      color: var(--gold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .preview-overlay h3 {
+      margin-top: 6px;
+      font-size: 24px;
+      line-height: 1.28;
+    }
+
+    .floating-chip {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .chip-1 { top: 12%; left: -36px; }
+    .chip-2 { right: -28px; bottom: 27%; }
+    .chip-3 { left: 24px; bottom: -18px; }
+
+    .scroll-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 54px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .scroll-indicator span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fff;
+      animation: scrollDot 1.5s infinite;
+    }
+
+    @keyframes scrollDot {
+      0% { transform: translateY(-10px); opacity: 0; }
+      40% { opacity: 1; }
+      100% { transform: translateY(12px); opacity: 0; }
+    }
+
+    section {
+      position: relative;
+      padding: clamp(74px, 10vw, 130px) clamp(20px, 5vw, 72px);
+    }
+
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-kicker {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: "Playfair Display", "Noto Sans TC", serif;
+      font-size: clamp(34px, 5.4vw, 66px);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+      max-width: 760px;
+    }
+
+    .section-desc {
+      max-width: 690px;
+      margin-top: 18px;
+      color: var(--text-soft);
+      font-size: 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: -58px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .stat-card {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035));
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1;
+      color: #fff;
+    }
+
+    .stat-card span {
+      display: block;
+      margin-top: 12px;
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+
+    .solution {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(116, 103, 255, 0.2), transparent 30%),
+        radial-gradient(circle at 88% 56%, rgba(201, 111, 143, 0.18), transparent 34%),
+        linear-gradient(to bottom, #07080d, #0d0f17);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 44px;
+    }
+
+    .feature-card {
+      min-height: 300px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.055);
+      overflow: hidden;
+      position: relative;
+      transition: 0.35s ease;
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      right: -60px;
+      bottom: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 180, 111, 0.22), transparent 70%);
+      opacity: 0;
+      transition: 0.35s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-7px);
+      border-color: rgba(217, 180, 111, 0.38);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .feature-card:hover::after {
+      opacity: 1;
+    }
+
+    .icon-pill {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 34px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(217, 180, 111, 0.26), rgba(116, 103, 255, 0.2));
+      color: var(--gold);
+      font-size: 22px;
+    }
+
+    .feature-card h3 {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .feature-card p {
+      color: var(--text-soft);
+    }
+
+    .showcase {
+      background: #0d0f17;
+      overflow: hidden;
+    }
+
+    .portfolio-section {
+      background: #0b0d13;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 22px;
+      margin-top: 32px;
+    }
+
+    .portfolio-card {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 24px 72px rgba(0, 0, 0, 0.24);
+    }
+
+    .portfolio-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      background: #000;
+    }
+
+    .portfolio-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .portfolio-caption {
+      padding: 18px 20px 22px;
+    }
+
+    .portfolio-caption h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .portfolio-caption p {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .marquee {
+      display: flex;
+      gap: 22px;
+      margin-top: 48px;
+      width: max-content;
+      animation: marquee 34s linear infinite;
+    }
+
+    .reel-card {
+      width: min(340px, 72vw);
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+    }
+
+    .reel-media {
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+    }
+
+    .reel-media video, .reel-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s ease;
+    }
+
+    .reel-card:hover .reel-media video,
+    .reel-card:hover .reel-media img {
+      transform: scale(1.06);
+    }
+
+    .reel-info {
+      padding: 20px 22px 24px;
+    }
+
+    .reel-info small {
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .reel-info h3 {
+      margin-top: 8px;
+      font-size: 22px;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-50% - 11px)); }
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 48px;
+      align-items: start;
+      margin-top: 48px;
+    }
+
+    .sticky-box {
+      position: sticky;
+      top: 110px;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+    }
+
+    .sticky-box h3 {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .sticky-box p {
+      color: var(--text-soft);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 18px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .timeline-no {
+      font-family: "Playfair Display", serif;
+      font-size: 40px;
+      line-height: 1;
+      color: var(--gold);
+    }
+
+    .timeline-item h3 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-item p {
+      color: var(--text-soft);
+    }
+
+    .pricing {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(217, 180, 111, 0.2), transparent 34%),
+        #090a11;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 48px;
+    }
+
+    .price-card {
+      position: relative;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.055);
+      overflow: hidden;
+    }
+
+    .price-card.featured {
+      border-color: rgba(217, 180, 111, 0.48);
+      background: linear-gradient(145deg, rgba(217, 180, 111, 0.14), rgba(255, 255, 255, 0.06));
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.36);
+      transform: translateY(-14px);
+    }
+
+    .tag {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(217, 180, 111, 0.18);
+      color: #f7dca4;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .price-card h3 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .price-card .price {
+      margin: 24px 0;
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .price-card .price small {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .price-card p {
+      color: var(--text-soft);
+    }
+
+    .price-card ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin: 28px 0 30px;
+    }
+
+    .price-card li {
+      display: flex;
+      gap: 10px;
+      color: var(--text-soft);
+    }
+
+    .price-card li i {
+      color: var(--gold);
+      margin-top: 6px;
+    }
+
+    .cta-section {
+      padding-bottom: clamp(90px, 12vw, 150px);
+    }
+
+    .cta-panel {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 36px;
+      align-items: stretch;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 42px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
+      box-shadow: var(--shadow);
+    }
+
+    .cta-copy {
+      padding: clamp(34px, 6vw, 60px);
+    }
+
+    .cta-copy h2 {
+      font-family: "Playfair Display", "Noto Sans TC", serif;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.045em;
+      margin-bottom: 20px;
+    }
+
+    .cta-copy p {
+      color: var(--text-soft);
+      font-size: 18px;
+    }
+
+    .contact-form {
+      padding: clamp(28px, 5vw, 46px);
+      background: rgba(255, 255, 255, 0.06);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .form-field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: rgba(255, 255, 255, 0.64);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.24);
+      color: #fff;
+      padding: 15px 16px;
+      font: inherit;
+      outline: none;
+      transition: 0.25s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(217, 180, 111, 0.64);
+      box-shadow: 0 0 0 4px rgba(217, 180, 111, 0.08);
+    }
+
+    textarea {
+      min-height: 126px;
+      resize: vertical;
+    }
+
+    option {
+      background: #0d0f17;
+    }
+
+    .form-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 34px clamp(20px, 5vw, 72px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .nav { display: none; }
+      .hero-inner,
+      .process-grid,
+      .cta-panel {
+        grid-template-columns: 1fr;
+      }
+      .hero-card {
+        transform: none;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .stats-grid,
+      .feature-grid,
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .price-card.featured {
+        transform: none;
+      }
+      .contact-form {
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .site-header {
+        padding: 18px 20px;
+      }
+      .header-cta span {
+        display: none;
+      }
+      .hero-inner {
+        width: min(100% - 32px, 1180px);
+        padding-top: 112px;
+      }
+      .hero-actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+      .stats-grid,
+      .feature-grid,
+      .pricing-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-grid {
+        margin-top: 0;
+      }
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+      .floating-chip {
+        display: none;
+      }
+      .cta-panel {
+        border-radius: 28px;
+      }
+    }
+    /* Contact section styles */
+    .contact-section {
+      background: linear-gradient(180deg, rgba(13,15,23,0.6), rgba(7,8,13,0.6));
+      border-top: 1px solid var(--line);
+      padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 72px);
+    }
+
+    .contact-panel {
+      width: min(1060px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 34px;
+      align-items: start;
+    }
+
+    .contact-copy h2 { font-size: clamp(28px, 4.4vw, 44px); margin-bottom: 12px; }
+    .contact-copy p { color: var(--text-soft); margin-bottom: 18px; }
+
+    .gf-form {
+      padding: 26px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      box-shadow: 0 24px 60px rgba(0,0,0,0.36);
+    }
+
+    .gf-field { display: grid; gap: 8px; margin-bottom: 12px; }
+    .gf-field label { font-weight:700; color: rgba(255,255,255,0.84); font-size:13px; }
+    .gf-field input, .gf-field textarea, .gf-field select { padding: 12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.28); color: #fff; }
+    .gf-field textarea { min-height: 110px; resize: vertical; }
+
+    /* Hidden iframe for background submit */
+    .hidden-iframe { display: none; }
+
+    /* Modal */
+    .contact-modal {
+      position: fixed; inset: 0; display: grid; place-items: center; z-index: 1200; visibility: hidden; opacity: 0; transition: 180ms ease;
+    }
+    .contact-modal.show { visibility: visible; opacity: 1; }
+    .contact-modal .panel {
+      width: min(560px, calc(100% - 40px)); padding: 26px 28px; border-radius: 18px; background: rgba(4,5,8,0.86); border:1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow);
+      text-align: center; color: #fff;
+    }
+    .contact-modal .panel h3 { margin-bottom: 10px; font-size: 20px; }
+    .contact-modal .panel p { color: var(--text-soft); margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="site-header">
+    <a href="#top" class="brand" aria-label="AI MV Studio Home">
+      <span class="brand-mark"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+      <span>AI MV Studio</span>
+    </a>
+    <nav class="nav" aria-label="主選單">
+      <a href="#solution">服務亮點</a>
+      <a href="#showcase">影像作品</a>
+      <a href="#process">製作流程</a>
+      <a href="#pricing">招商方案</a>
+    </nav>
+    <a href="#contact" class="header-cta"><i class="fa-solid fa-paper-plane"></i><span>預約洽談</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="AI MV 招商主視覺">
+      <!-- 將 src 換成你的實際影片網址或本機影片路徑。muted + autoplay + loop + playsinline 是瀏覽器允許自動播放的關鍵。 -->
+      <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1920&q=85">
+        <source src="https://videos.pexels.com/video-files/853870/853870-hd_1920_1080_25fps.mp4" type="video/mp4" />
+      </video>
+
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="eyebrow"><i class="fa-solid fa-circle-play"></i> AI Music Video Production</div>
+          <h1>讓一首歌，長出一支<span>會招商的 AI MV。</span></h1>
+          <p class="hero-lead">從歌曲故事、角色視覺、分鏡腳本、AI 影像生成到社群短影音切版，為音樂人、品牌、IP 與活動打造高轉換、高記憶點的 AI 影像內容。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact"><i class="fa-solid fa-calendar-check"></i> 申請合作提案</a>
+            <a class="btn btn-ghost" href="#showcase"><i class="fa-solid fa-film"></i> 查看作品形式</a>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="AI MV 影片預覽卡片">
+          <div class="floating-chip chip-1"><i class="fa-solid fa-music"></i> Lyrics to Visual</div>
+          <div class="floating-chip chip-2"><i class="fa-solid fa-robot"></i> AI Generated</div>
+          <div class="floating-chip chip-3"><i class="fa-solid fa-chart-line"></i> Brand Conversion</div>
+          <div class="preview-frame">
+            <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=85">
+              <source src="https://videos.pexels.com/video-files/3066446/3066446-uhd_1440_2560_24fps.mp4" type="video/mp4" />
+            </video>
+            <div class="preview-overlay">
+              <small>Campaign Ready</small>
+              <h3>一支主 MV，延伸 12 支社群短影音素材</h3>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="scroll-indicator" aria-hidden="true"><span></span></div>
+    </section>
+
+    <div class="section-inner">
+      <div class="stats-grid" aria-label="服務數據亮點">
+        <div class="stat-card"><strong>01</strong><span>從歌曲概念到完整影像企劃</span></div>
+        <div class="stat-card"><strong>03</strong><span>MV／Reels／招商剪輯三種版本</span></div>
+        <div class="stat-card"><strong>12+</strong><span>可延伸社群短影音素材</span></div>
+        <div class="stat-card"><strong>7-21</strong><span>依專案規模彈性製作天數</span></div>
+      </div>
+    </div>
+
+    <section id="solution" class="solution">
+      <div class="section-inner">
+        <div class="section-kicker">What We Build</div>
+        <h2 class="section-title">不只是做影片，而是把音樂包裝成可被投資、合作與傳播的視覺商品。</h2>
+        <p class="section-desc">適合唱片宣傳、演唱會前導、品牌聯名、地方活動、文化 IP、教育課程、企業形象歌曲與募資招商使用。</p>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="icon-pill"><i class="fa-solid fa-pen-nib"></i></div>
+            <h3>故事企劃與分鏡</h3>
+            <p>把歌詞、情緒、品牌主張轉成完整 MV 故事線，包含角色設定、場景氣氛、鏡頭語言與招商賣點。</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon-pill"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <h3>AI 影像生成</h3>
+            <p>依照音樂調性建立一致的視覺世界，生成電影感、動畫感、未來感或手繪感的 MV 影像素材。</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon-pill"><i class="fa-solid fa-clapperboard"></i></div>
+            <h3>剪輯與社群版本</h3>
+            <p>輸出完整橫式 MV、直式短影音、招商簡報片段與預告 Teaser，讓一支影片支援多平台曝光。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="showcase" class="showcase">
+      <div class="section-inner">
+        <div class="section-kicker">Showcase Direction</div>
+        <h2 class="section-title">不同音樂類型，都能建立專屬的 AI 影像宇宙。</h2>
+        <p class="section-desc">以下為作品展示版型，可替換成實際案例影片。每張卡片皆可放置自動播放、靜音、循環的 AI MV 片段。</p>
+      </div>
+
+      <div class="marquee" aria-label="AI MV 作品展示跑馬燈">
+        <article class="reel-card">
+          <div class="reel-media"><video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/3085909/3085909-uhd_1440_2560_25fps.mp4" type="video/mp4" /></video></div>
+          <div class="reel-info"><small>Pop / Idol</small><h3>霓虹舞台感</h3></div>
+        </article>
+        <article class="reel-card">
+          <div class="reel-media"><video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/3066446/3066446-uhd_1440_2560_24fps.mp4" type="video/mp4" /></video></div>
+          <div class="reel-info"><small>Cinematic</small><h3>電影敘事感</h3></div>
+        </article>
+        <article class="reel-card">
+          <div class="reel-media"><img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=85" alt="音樂演出舞台" /></div>
+          <div class="reel-info"><small>Concert</small><h3>演唱會前導</h3></div>
+        </article>
+        <article class="reel-card">
+          <div class="reel-media"><img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=85" alt="大型音樂活動現場" /></div>
+          <div class="reel-info"><small>Brand IP</small><h3>品牌聯名片</h3></div>
+        </article>
+
+        <article class="reel-card" aria-hidden="true">
+          <div class="reel-media"><video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/3085909/3085909-uhd_1440_2560_25fps.mp4" type="video/mp4" /></video></div>
+          <div class="reel-info"><small>Pop / Idol</small><h3>霓虹舞台感</h3></div>
+        </article>
+        <article class="reel-card" aria-hidden="true">
+          <div class="reel-media"><video autoplay muted loop playsinline><source src="https://videos.pexels.com/video-files/3066446/3066446-uhd_1440_2560_24fps.mp4" type="video/mp4" /></video></div>
+          <div class="reel-info"><small>Cinematic</small><h3>電影敘事感</h3></div>
+        </article>
+        <article class="reel-card" aria-hidden="true">
+          <div class="reel-media"><img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=85" alt="" /></div>
+          <div class="reel-info"><small>Concert</small><h3>演唱會前導</h3></div>
+        </article>
+        <article class="reel-card" aria-hidden="true">
+          <div class="reel-media"><img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=85" alt="" /></div>
+          <div class="reel-info"><small>Brand IP</small><h3>品牌聯名片</h3></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="portfolio-section">
+      <div class="section-inner">
+        <div class="section-kicker">作品集展示</div>
+        <h2 class="section-title">短影音純畫面展示</h2>
+        <p class="section-desc">以下為近期作品示範，採用自動播放、靜音、循環播放，並移除社群互動按鈕，以純粹影像展示形式呈現。</p>
+
+        <div class="portfolio-grid">
+          <article class="portfolio-card">
+            <div class="portfolio-frame">
+              <iframe src="https://www.youtube.com/embed/h7hM5BlOcMY?autoplay=1&mute=1&loop=1&playlist=h7hM5BlOcMY&controls=0&rel=0&modestbranding=1&showinfo=0" title="VOBO皮鞋" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="portfolio-caption">
+              <h3>VOBO皮鞋</h3>
+              <p>純畫面展示，短影片自動播放、靜音、循環，呈現鞋款質感與品牌氛圍。</p>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <div class="portfolio-frame">
+              <iframe src="https://www.youtube.com/embed/bcFnNsTVntk?autoplay=1&mute=1&loop=1&playlist=bcFnNsTVntk&controls=0&rel=0&modestbranding=1&showinfo=0" title="SHARK 鯊克防水鞋" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="portfolio-caption">
+              <h3>SHARK 鯊克防水鞋</h3>
+              <p>採用無按鈕嵌入式短影片，專注於產品畫面呈現。</p>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <div class="portfolio-frame">
+              <iframe src="https://www.youtube.com/embed/n9VTjZdNvEQ?autoplay=1&mute=1&loop=1&playlist=n9VTjZdNvEQ&controls=0&rel=0&modestbranding=1&showinfo=0" title="黑武士鞋" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="portfolio-caption">
+              <h3>黑武士鞋</h3>
+              <p>畫面為主，強調動態視覺質感，適合商品展示與品牌形象。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-inner">
+        <div class="section-kicker">Production Flow</div>
+        <h2 class="section-title">從一首歌到一套招商素材，流程清楚、交付明確。</h2>
+
+        <div class="process-grid">
+          <aside class="sticky-box">
+            <h3>交付不是只有 MV</h3>
+            <p>我們會把影片拆成能用在網站、簡報、社群、廣告投放與招商洽談的內容素材，讓投資人、合作品牌與粉絲都能快速理解你的音樂價值。</p>
+          </aside>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <div class="timeline-no">01</div>
+              <div><h3>品牌與歌曲定位</h3><p>確認歌曲情緒、受眾、招商目標與核心視覺方向。</p></div>
+            </article>
+            <article class="timeline-item">
+              <div class="timeline-no">02</div>
+              <div><h3>腳本分鏡與視覺提案</h3><p>產出故事線、角色、場景、風格板與主視覺提案。</p></div>
+            </article>
+            <article class="timeline-item">
+              <div class="timeline-no">03</div>
+              <div><h3>AI 生成與動態製作</h3><p>建立一致性角色與場景，生成鏡頭素材並進行動態處理。</p></div>
+            </article>
+            <article class="timeline-item">
+              <div class="timeline-no">04</div>
+              <div><h3>剪輯包裝與招商輸出</h3><p>完成主片、預告片、短影音、封面與招商簡報可用素材。</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+      <div class="section-inner">
+        <div class="section-kicker">Partnership Plan</div>
+        <h2 class="section-title">依照歌曲、活動與招商目標，選擇最適合的製作規模。</h2>
+        <p class="section-desc">以下為網站展示用方案文字，可依實際報價改為「專案洽詢制」。</p>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <h3>Starter</h3>
+            <p>適合單曲宣傳、社群測試與小型活動。</p>
+            <div class="price">NT$ 38K <small>起</small></div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> 30-45 秒 AI MV 片段</li>
+              <li><i class="fa-solid fa-check"></i> 1 組主視覺風格</li>
+              <li><i class="fa-solid fa-check"></i> 3 支社群短影音</li>
+              <li><i class="fa-solid fa-check"></i> 基礎封面設計</li>
+            </ul>
+            <a class="btn btn-ghost" href="#contact">洽詢此方案</a>
+          </article>
+
+          <article class="price-card featured">
+            <span class="tag">熱門招商</span>
+            <h3>Campaign</h3>
+            <p>適合正式 MV 發佈、品牌聯名與招商簡報。</p>
+            <div class="price">NT$ 88K <small>起</small></div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> 90-120 秒完整 AI MV</li>
+              <li><i class="fa-solid fa-check"></i> 分鏡腳本與視覺企劃</li>
+              <li><i class="fa-solid fa-check"></i> 8 支社群短影音</li>
+              <li><i class="fa-solid fa-check"></i> 招商簡報影片片段</li>
+            </ul>
+            <a class="btn btn-primary" href="#contact">預約策略會議</a>
+          </article>
+
+          <article class="price-card">
+            <h3>Premium IP</h3>
+            <p>適合音樂 IP、演唱會、地方文化與企業形象歌曲。</p>
+            <div class="price">客製報價</div>
+            <ul>
+              <li><i class="fa-solid fa-check"></i> 完整 MV 與系列視覺</li>
+              <li><i class="fa-solid fa-check"></i> 角色／世界觀設定</li>
+              <li><i class="fa-solid fa-check"></i> 多平台素材包</li>
+              <li><i class="fa-solid fa-check"></i> 可搭配招商網站頁面</li>
+            </ul>
+            <a class="btn btn-ghost" href="#contact">討論客製專案</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact-cta" class="cta-section">
+      <div class="section-inner">
+        <div class="cta-panel">
+          <div class="cta-copy">
+            <div class="section-kicker">Start Your AI MV</div>
+            <h2>準備把你的音樂，變成能被看見的招商作品。</h2>
+            <p>留下歌曲類型、預計用途與合作需求，我們會依據你的目標規劃最適合的 AI MV 製作方向。</p>
+          </div>
+
+          <form class="contact-form" action="#" method="post">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="name">姓名／單位</label>
+                <input id="name" name="name" type="text" placeholder="請輸入姓名或品牌名稱" />
+              </div>
+              <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="hello@example.com" />
+              </div>
+              <div class="form-field">
+                <label for="type">合作類型</label>
+                <select id="type" name="type">
+                  <option>單曲 MV 製作</option>
+                  <option>品牌聯名招商</option>
+                  <option>演唱會／活動前導</option>
+                  <option>企業形象歌曲</option>
+                  <option>其他客製專案</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="budget">預算區間</label>
+                <select id="budget" name="budget">
+                  <option>3-5 萬</option>
+                  <option>5-10 萬</option>
+                  <option>10-20 萬</option>
+                  <option>20 萬以上</option>
+                  <option>尚未確定</option>
+                </select>
+              </div>
+              <div class="form-field full">
+                <label for="message">專案需求</label>
+                <textarea id="message" name="message" placeholder="可以簡單描述歌曲風格、希望影片用途、預計上線時間與參考風格。"></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit" style="margin-top: 18px; width: 100%;"><i class="fa-solid fa-paper-plane"></i> 送出合作需求</button>
+            <p class="form-note">此表單目前為前端展示版，如需正式收件可串接 Google Form、EmailJS、Notion 或後端 API。</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / 合作洽詢（串接 Google Form 背景提交） -->
+    <section id="contact" class="contact-section">
+      <div class="contact-panel">
+        <div class="contact-copy">
+          <div class="section-kicker">Contact</div>
+          <h2>聯絡我 / 合作洽詢</h2>
+          <p>填寫以下簡要需求，我們會透過 Email 與您聯繫。表單會在背景送出，維持在本頁並顯示送出提示。</p>
+          <p class="section-desc">請提供姓名、Email 與簡短需求；若需要更詳細討論，收到回覆後我們將安排進一步洽談。</p>
+        </div>
+
+        <div>
+          <form id="googleContactForm" class="gf-form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSc-_Yik_iSuJk22ZvP9CrustRMG-U51g31qtffWiS9QD0V_uw/formResponse" method="POST" target="hidden_iframe_google">
+            <!-- 對應 Google Form 的 entry IDs（從 FB_PUBLIC_LOAD_DATA_ 解析） -->
+            <div class="gf-field">
+              <label for="gf-name">姓名 *</label>
+              <input id="gf-name" name="entry.588998168" type="text" placeholder="姓名" required />
+            </div>
+
+            <div class="gf-field">
+              <label for="gf-email">Email *</label>
+              <input id="gf-email" name="entry.476214014" type="email" placeholder="you@example.com" required />
+            </div>
+
+            <div class="gf-field">
+              <label for="gf-type">企劃類型</label>
+              <select id="gf-type" name="entry.1610329698">
+                <option>品牌聯名招商</option>
+                <option>演唱會／活動前導</option>
+                <option>企業形象歌曲</option>
+                <option>其他客製專案</option>
+              </select>
+            </div>
+
+            <div class="gf-field">
+              <label for="gf-brief">需求簡述</label>
+              <textarea id="gf-brief" name="entry.1646642689" placeholder="簡短描述您的需求或想法"></textarea>
+            </div>
+
+            <!-- 保留原表單所需的隱藏欄位，使用原始碼中的值以提高相容性 -->
+            <input type="hidden" name="fvv" value="1">
+            <input type="hidden" name="partialResponse" value="[null,null,&quot;7283397643623141289&quot;]">
+            <input type="hidden" name="pageHistory" value="0">
+            <input type="hidden" name="fbzx" value="7283397643623141289">
+            <input type="hidden" name="submissionTimestamp" value="-1">
+
+            <button id="gf-submit" class="btn btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> 送出需求</button>
+          </form>
+        </div>
+      </div>
+
+      <iframe name="hidden_iframe_google" id="hidden_iframe_google" class="hidden-iframe" loading="lazy"></iframe>
+
+      <!-- 成功提示視窗（自訂） -->
+      <div id="contactModal" class="contact-modal" aria-hidden="true">
+        <div class="panel">
+          <h3>需求已送出，我們將盡快與您聯絡！</h3>
+          <p>已收到您的需求，感謝您對 AI MV Studio 的信任。</p>
+          <button id="contactModalClose" class="btn btn-ghost">關閉</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // 背景送出 Google Form：利用隱藏 iframe 接收回應並顯示自訂提示視窗
+    (function(){
+      var form = document.getElementById('googleContactForm');
+      var iframe = document.getElementById('hidden_iframe_google');
+      var submitted = false;
+      var modal = document.getElementById('contactModal');
+      var closeBtn = document.getElementById('contactModalClose');
+
+      form.addEventListener('submit', function(e){
+        submitted = true;
+        // 小幅視覺反饋（停用按鈕）
+        var btn = document.getElementById('gf-submit');
+        btn.disabled = true; btn.style.opacity = 0.7;
+        // 讓表單正常提交到隱藏 iframe（不會導致主頁面跳轉）
+      });
+
+      iframe.addEventListener('load', function(){
+        // iframe 載入會在第一次初始化時觸發，僅在已提交後顯示提示
+        if (!submitted) return;
+        submitted = false;
+        var btn = document.getElementById('gf-submit');
+        if (btn) { btn.disabled = false; btn.style.opacity = 1; }
+        // 顯示自訂 modal
+        modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+        // 清空表單欄位
+        try { form.reset(); } catch(err){}
+      });
+
+      closeBtn.addEventListener('click', function(){
+        modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');
+      });
+    })();
+  </script>
+    <div class="footer-inner">
+      <span>© 2026 AI MV Studio. All Rights Reserved.</span>
+      <span>AI Music Video｜Brand Film｜Campaign Visual</span>
+    </div>
+  </footer>
+</body>
+</html>
